@@ -1,27 +1,28 @@
-# minizip
+# `Examples`
 
 Create a new zip archive with default compression level, and
 Append directory files to the zip archive
-
+```c
 	zip_directory((char *)"dep_lib.zip", (char *)"dep_lib");
-	
+```	
 	
 
 	
 Extract a zip archive into a folder.
-
+```c
 	int arg = 54;
 	zip_extract_init_file("dep_lib.zip", "tmp", on_extract_entry, &arg);
-
+```
 
 Extract a zip archive into mem.
-
+```c
 	 zip_extract_init_mem((const void *)dep_lib_Buf, dep_lib_Size, TEMP_EXTRACT_DIR, on_extract_entry, &arg);
+```
 
-Examples
 
 Create a new zip archive with default compression level.
 
+```c
 struct zip_t *zip = zip_open("foo.zip", ZIP_DEFAULT_COMPRESSION_LEVEL, 'w');
 {
     zip_entry_open(zip, "foo-1.txt");
@@ -41,7 +42,8 @@ struct zip_t *zip = zip_open("foo.zip", ZIP_DEFAULT_COMPRESSION_LEVEL, 'w');
     zip_entry_close(zip);
 }
 zip_close(zip);
-
+```
+```c
 Append to the existing zip archive.
 
 struct zip_t *zip = zip_open("foo.zip", ZIP_DEFAULT_COMPRESSION_LEVEL, 'a');
@@ -54,6 +56,7 @@ struct zip_t *zip = zip_open("foo.zip", ZIP_DEFAULT_COMPRESSION_LEVEL, 'a');
     zip_entry_close(zip);
 }
 zip_close(zip);
+```
 
 Extract a zip archive into a folder.
 

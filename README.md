@@ -19,7 +19,9 @@ Extract a zip archive into mem.
 	 zip_extract_init_mem((const void *)dep_lib_Buf, dep_lib_Size, TEMP_EXTRACT_DIR, on_extract_entry, &arg);
 
 Examples
+
 Create a new zip archive with default compression level.
+
 struct zip_t *zip = zip_open("foo.zip", ZIP_DEFAULT_COMPRESSION_LEVEL, 'w');
 {
     zip_entry_open(zip, "foo-1.txt");
@@ -39,7 +41,9 @@ struct zip_t *zip = zip_open("foo.zip", ZIP_DEFAULT_COMPRESSION_LEVEL, 'w');
     zip_entry_close(zip);
 }
 zip_close(zip);
+
 Append to the existing zip archive.
+
 struct zip_t *zip = zip_open("foo.zip", ZIP_DEFAULT_COMPRESSION_LEVEL, 'a');
 {
     zip_entry_open(zip, "foo-3.txt");
@@ -50,7 +54,9 @@ struct zip_t *zip = zip_open("foo.zip", ZIP_DEFAULT_COMPRESSION_LEVEL, 'a');
     zip_entry_close(zip);
 }
 zip_close(zip);
+
 Extract a zip archive into a folder.
+
 int on_extract_entry(const char *filename, void *arg) {
     static int i = 0;
     int n = *(int *)arg;
@@ -76,7 +82,9 @@ struct zip_t *zip = zip_open("foo.zip", 0, 'r');
 zip_close(zip);
 
 free(buf);
+
 Extract a zip entry into memory (no internal allocation).
+
 unsigned char *buf;
 size_t bufsize;
 
@@ -94,7 +102,9 @@ struct zip_t *zip = zip_open("foo.zip", 0, 'r');
 zip_close(zip);
 
 free(buf);
+
 Extract a zip entry into memory using callback.
+
 struct buffer_t {
     char *data;
     size_t size;
@@ -124,7 +134,9 @@ struct zip_t *zip = zip_open("foo.zip", 0, 'r');
 zip_close(zip);
 
 free(buf.data);
+
 Extract a zip entry into a file.
+
 struct zip_t *zip = zip_open("foo.zip", 0, 'r');
 {
     zip_entry_open(zip, "foo-2.txt");
@@ -134,7 +146,9 @@ struct zip_t *zip = zip_open("foo.zip", 0, 'r');
     zip_entry_close(zip);
 }
 zip_close(zip);
+
 List of all zip entries
+
 struct zip_t *zip = zip_open("foo.zip", 0, 'r');
 int i, n = zip_total_entries(zip);
 for (i = 0; i < n; ++i) {

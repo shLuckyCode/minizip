@@ -1,4 +1,4 @@
-       ## https://github.com/kuba--/zip
+            copyright: https://github.com/kuba--/zip
 
 # `Examples`
 

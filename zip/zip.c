@@ -11,6 +11,7 @@
 #include <errno.h>
 #include <sys/stat.h>
 #include <time.h>
+#include <io.h>
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(_MSC_VER) ||              \
     defined(__MINGW64__)
@@ -593,7 +594,7 @@ int zip_entry_fwrite(struct zip_t *zip, const char *filename) {
 #if defined(_MSC_VER) || defined(__MINGW64__)
   if (0 != fopen_s(&stream, filename, "rb"))
 #else
-  if (0 != (stream = fopen(filename, "rb")))
+  if ((stream = fopen(filename, "rb")))
 #endif
   {
     // Cannot open filename
@@ -989,4 +990,69 @@ out:
   }
 
   return status;
+}
+
+int zip_entry_directory_write(const char *zipName, const char *lpDirPath)
+{
+	int statis = -1;
+	struct _finddata_t filefind;
+	char szDir[MAX_PATH] = { 0 };
+	intptr_t hFile;
+
+	if (lpDirPath[0] == '\0' || 0 != _access(lpDirPath, 0))
+		return statis;
+
+	strcpy_s(szDir, sizeof(szDir), lpDirPath);
+	strcat_s(szDir, sizeof(szDir), "\\*.*");
+
+	if ((hFile = _findfirst(szDir, &filefind)) == -1L)
+		return statis;
+
+	struct zip_t *zip = zip_open(zipName, ZIP_DEFAULT_COMPRESSION_LEVEL, 'w');  //Create Empty zip file
+	if (zip == NULL)
+		return statis;
+
+	do 
+	{
+		// pass "." and ".."
+		if (strcmp(filefind.name, ".") == 0 || strcmp(filefind.name, "..") == 0)
+			continue;
+
+		if (filefind.attrib & _A_SUBDIR)
+		{
+			printf("%s is a Directory\n", filefind.name);
+		}else
+		{
+			//begin zip_entry
+			if (0 == zip_entry_open(zip, filefind.name))
+			{
+				char szFullName[MAX_PATH] = { 0 };
+				sprintf_s(szFullName, sizeof(szFullName), "%s\\%s", lpDirPath, filefind.name);
+
+				if (0 == zip_entry_fwrite(zip, szFullName))
+				{
+					printf("%s write in %s Sucees\n", filefind.name, zipName);
+					statis = 0;
+				}
+				else
+				{
+					printf("%s write in %s faild\n", filefind.name, zipName);
+					statis = -2;
+					zip_entry_close(zip);
+					break;
+				}
+
+				zip_entry_close(zip);
+			}
+		}
+
+	} while (_findnext(hFile, &filefind) == 0);
+
+	zip_close(zip);
+	_findclose(hFile);
+
+	if (0 == statis) printf("zip_entry over!\n");
+
+	return statis;
+
 }

@@ -319,6 +319,19 @@ extern int zip_extract_init_mem(const void *pMem, size_t size, const char *dir,
 	int(*on_extract_entry)(const char *filename, void *arg),
 	void *arg);
 
+/*
+Create a new zip archive with default compression level, and
+Append directory files to the zip archive
+
+
+Args:
+zipName: OutPut ZipName
+lpDirPath: Input dirctory path
+
+Returns:
+The return code - 0 on success, negative number (< 0) on error.
+*/
+extern int zip_entry_directory_write(const char *zipName, const char *lpDirPath);
 
 #ifdef __cplusplus
 }
